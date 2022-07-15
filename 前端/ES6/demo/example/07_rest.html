@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // ES6引入rest参数，用于获取函数的实参，用来替代argument
+        // 1、ES5获取实参的方式
+        function stars(){
+            console.log(arguments)  //arguments是一个Object实例对象
+        }
+        stars('刘德华','郭富城','张学友','黎明')
+        // 2、ES6获取实参的方式
+        function players(...args){
+            console.log(args)   //args是一个数组对象
+        }
+        players('Kobe','T-mac','Iverson','Carter')
+
+        // 3、rest参数必须是最后一个参数
+        function fn(a,b,...args){
+            console.log(a,b,args)
+        }
+        fn(1,2,3,4,5,6)     //1 2 (4) [3, 4, 5, 6]
+    </script>
+</body>
+</html>

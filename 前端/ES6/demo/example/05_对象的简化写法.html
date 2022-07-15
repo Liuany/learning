@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>对象的简化写法</title>
+</head>
+<body>
+    <script>
+        // ES6允许在大括号里面直接写入变量和函数，作为对象的属性和方法。
+        let name = '张三';
+        let change = function(){
+            console.log('每天都要尝试去改变自己，让自己变得更好！');
+        }
+
+        const person = {
+            // name:name,  
+            name,
+            // change:change()
+            change,
+            // improve:function(){...}
+            improve(){
+                console.log('提高自己')
+            }
+        }
+        console.log(person,person.change(),person.improve())
+
+    </script>
+</body>
+</html>

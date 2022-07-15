@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>箭头函数</title>
+</head>
+<body>
+    <script>
+        // 1、声明
+        // 传统方式声明一个函数
+        let fnNormal = function(...params){
+
+        }
+        // 箭头函数
+        let fnArrow = (...params)=>{
+            
+        }
+
+        // 2、this是静态的 this始终指向函数声明时所在作用域下的this的值
+        function getName(){
+            return console.log(this.name) 
+        }
+        let getName2 = ()=>{
+            return console.log(this.name)
+        }
+        // 设置window对象的name属性
+        window.name = 'ES6'
+        const person = {
+            name:'学习ES6'
+        }
+        // 直接调用
+        getName()   //this指向window
+        getName2()  //this指向window
+        // call方法调用
+        getName.call(person)    //this指向函数
+        getName2.call(person)   //this指向window
+
+        // 3、不能构造实例对象
+        let Student = (name,age)=>{
+            this.name = name
+            this.age = age
+        }
+
+        // let me = new Student('Peter',18)     //Student is not a constructor
+        // console.log(me)
+
+        // 4、不能使用arguments变量
+        let fn = ()=>{
+            // console.log(arguments)   //arguments is not defined
+        }
+        fn()
+
+        // 5、箭头函数的缩写
+        // 1) 当参数只有一个的时候可以省略小括号
+        let add = n =>{
+            return n + n
+        }
+        console.log(add(8))
+        // 2)当代码体只有一条语句时可以省略花括号
+        let square = n => n * n
+        console.log(square(5))
+    </script>
+</body>
+</html>

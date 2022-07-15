@@ -1,0 +1,118 @@
+2.1：基础指令
+1、查看所有的配置以及他们所在的文件：$ git config --list --show-origin
+2、设置用户名：$ git config --global user.name "Liu Wen"
+3、设置用邮件地址：$ git config --global user.email "631966847@qq.com"
+注意：如果设置了global选项，那么该命令只要运行一次，因为之后无论你在该系统上做任何事情，git都会使用那些信息。
+4、检查配置信息：$ git config --list
+5、检查某一项配置： $ git config user.name (eg:检查用户名)
+6、初始化：$ git init
+7、克隆现有仓库： $ git clone <url> (一般来说都是用这种方式去clone一个项目再进行开发，git克隆的是改git仓库服务器上的几乎所有数据，而不是仅仅复制完成你的工作所需要
+的文件，因此，如果你的服务器磁盘坏掉了，你通常可以使用任何一个克隆下来的用户端来重建服务器上的仓库)
+8、检查文件状态：$git status
+9、开始追踪一个文件或将已跟踪的文件放入暂存区或合并时将有冲突的文件标记为已解决：git add <files> （可以理解为“将内容添加到下一次提交中”而不是“将一个文件添加到项目中”）
+10、提交更新：$git commit（需要注意的是，使用git commit只是在本地生成了一个版本，并没有与远程仓库建立联系，需要使用git push指令才能将本地版本推送到远程仓库）
+①$git commit -m "提交日志信息"
+②$git commit -a -m "提交日志信息"：需要注意的是，git commit只会生成已存入暂存区的快照。因此，需要将已修改的文件进行提交的话要先使用$git add将已修改的文件放置暂存
+区，然后用git commit 指令生成当前版本的快照，而我们使用 git commit -a 指令则可以省略git add步骤，将当前工作区中已修改的文件放置暂存区并执行提交操作。
+11、移除文件：$git rm <fileName>(要从git中移除某个文件，就必须要从已跟踪文件清单中，确切地说是从暂存区域中移除，然后提交。如果手动从git目录中删除一个文件，则会出现在Changes not
+staged for commit中，这时，需要再运行git rm指令)。
+①：git rm -f (force) <fileName>：强制删除之前修改过或已经放到暂存区的文件。这是一种安全机制，因为没有生成快照的(没有commit)的数据，不能被git修复。
+②：git rm --cached <fileName>：把一个文件从git仓库中删除（亦从暂存区删除），但仍希望将该文件保留在当前工作目录中（改文件没有添加在.gitignore文件中）
+12、移动文件：git mv <fileName>:其实这个指令包含了三个指令，①mv <fileName1> <fileName2> ②git rm <fileName1> ③git add <fileName2>
+13、查看提交历史：$git log (默认按时间顺序倒叙排列)
+①：git log -p/--patch：显示每次提交的差异
+②：git log -p -2：显示每次提交的差异，但是只显示最近两次的提交，数字可以根据需要进行修改。
+③：git log --stat：显示每次提交的简略统计信息（列出所有被修改过的文件，有多少个文件被修改了以及被修改过的文件的哪些行被移除或是添加了）。
+④：git log --pretty：使用不同于默认格式的方式展示提交历史。
+1> git log --pretty=online：将每个提交放在一行显示。
+2> git log --pretty=format：定制记录的显示格式。
+14、git reset HEAD <filename>（将文件从暂存区放回工作区） 然后再用 git checkout -- <filename> 指令（清空工作区,不要轻易使用这条命令）：将文件回退到上一次提交的版本 
+15、git reset --hard <版本号>：将本地仓库回退到某一个版本
+案例如下：
+$ git log --pretty=format:"%h - %an, %ar : %s"
+ca82a6d - Scott Chacon, 6 years ago : changed the version number
+085bb3b - Scott Chacon, 6 years ago : removed unnecessary test
+a11bef0 - Scott Chacon, 6 years ago : first commit
+更多常用选项：
+Option              Introducation
+%H                  提交的完整哈希值
+%h                  提交的简写哈希值
+%T                  树的完整哈希值
+%t                  树的简写哈希值
+%P                  父提交的完整哈希值
+%p                  父提交的简写哈希值
+%an                 作者名字(作者是实际作出修改的人)
+%ae                 作者的电子邮件地址
+%ad                 作者修订日期（可以用 --date=选项 来定制格式）
+%ar                 作者修订日期，按多久以前的方式显示
+%cn                 提交者的名字（最后将工作成果提交到仓库的人）
+%ce                 提交者的电子邮件地址
+%cd                 提交日期
+%cr                 提交日期（距今多长时间）
+%s                  提交说明
+⑤：关于git log 更多的常用选项
+Option              Introducation
+-p                  按补丁格式显示每个提交引入的差异。
+--stat              显示每次提交的文件修改统计信息。
+--shortstat         只显示 --stat 中最后的行数修改添加移除统计。
+--name-only         仅在提交信息后显示已修改的文件清单。
+--name-status       显示新增、修改、删除的文件清单。
+--abbrev-commit     仅显示 SHA-1 校验和所有 40 个字符中的前几个字符。
+--relative-date     使用较短的相对时间而不是完整格式显示日期（比如“2 weeks ago”）。
+--graph             在日志旁以 ASCII 图形显示分支与合并历史。
+--pretty            使用其他格式显示历史提交信息。可用的选项包括 oneline、short、full、fuller 和 format（用来定义自己的格式）。
+--oneline           --pretty=oneline --abbrev-commit 合用的简写。
+⑥：git log --since=2.weeks：近两周的日志（该命令的可用格式十分丰富，可以是类似"2020-06-15"的具体某一天，也可以是类似"2 years 1 day 3 minutes ago"的相对日期）
+1> git log --since="2020-06-15"：2020年6月15日之后的提交记录日志
+2> git log --since="2 hours ago"：2小时之前的提交记录日志
+3> git log --before="2020-06-17"：2020年6月17日之前的提交记录日志
+⑦：git log -S "x":接受一个字符串参数，并且只会调用哪些添加或删除了该字符串的提交,假设你想找添加或删除了对某一个特定函数的引用提交，可以调用git log -S function_name
+⑧：git log --<path>：根据路径查找。
+
+2.4：撤销操作
+1、$git commit --amend：提交完了发现漏掉了几个文件没有提交，或者是提交信息写错了,这时候我们可以用该指令来重新提交。不同于再次使用git commit指令，使用该指令在Git仓
+库中只会有一个提交版本，本次提交将代替上一次提交，就好像上一次的提交完全没有发生过一样，这样可以防止我们的仓库历史变得很混乱。
+2、取消暂存文件：git reset HEAD <file>...
+3、撤销对文件的修改：git checkout -- <file>：这是一个危险的命令，会让文件之前的的修改还原到最近的一个版本，如果不是十分确定轻易不要执行该命令！
+
+2.5：远程仓库的使用
+1、git remote：查看远程仓库
+2、git remote -v:查看远程仓库及其对应的url
+3、git remote add <shortname> <url>:添加远程仓库
+4、git fetch <remote>：从远程仓库中获得数据 （该命令只会将数据下载到本地仓库，但不会自动合并或修改当前的工作，如果当前分支设置了跟踪远程分支我们可以使用git pull
+指令，来从远程仓库获取数据）
+5、git push <remote> <branch>：推送到远程仓库
+6、git remote show <remote>：查看某个远程仓库
+7、git remote rename <oldname> <newname>：远程仓库重命名
+8、git remote remove <remote>：远程仓库删除
+9、git pull：抓取所有远程引用，然后将远程master分支合并到本地master分支
+
+2.6：打标签
+1、git tag：列出标签
+2、git tag -a <tagname> -m "xxx":创建一个附注标签（通常建议创建此种标签，它是储存在数据库的一个完整的对象，包含打标签者的名字、邮件、日期时间及标签信息）
+3、git show <tagname>：查看标签信息和与之对应的提交信息
+4、git tag <tagname>：创建一个轻量级标签（它只是某个特定提交的引用）
+5、git push origin <tagname>：共享某个特定的标签
+6、git push origin --tags：共享所有标签
+7、git checkout <tagname>：检出标签（说实话不知道啥意思）
+8、git tag -d <tagname>/git tag --delete <tagname>：删除标签
+
+2.7：git别名
+1、git config --global alias.<别名> '别名替代的指令'
+
+3.2：分支的新建与合并
+1、git branch <branchname>：新建一个分支
+2、git checkout -b <branchname>：新建一个分支并检出到该分支
+3、git checkout <branchname>：检出到指定的分支
+3、git branch -d <branchname>：删除指定的分支 (未合并的分支无法删除,使用git branch -D <branchname>指令可以强制删除未合并的分支，但是我不建议这么干)
+4、git merge <branchname>：合并分支
+5、git branch：查看当前所有分支
+6、git branch -v：查看当前所有的分支的最后一次提交
+7、git branch --merged：查看已合并的分支
+8、git branch --no-merged：查看未合并的分支
+9、git rebase：变基（变基跟合并其实功能相似，只是不会生成一个额外的快照，会将版本按照被变基的分支向前推进，这样会使得提交历史在同一平面上）
+
+移除跟踪
+1、git rm -r --cached .(git rm -r --cached <filename>或者单独清楚不需要跟踪的问价的缓存)
+2、重新add
+3、commit

@@ -1,0 +1,30 @@
+1、修改启动参数：在Edit Configurations中在Configuration中修改VM options:例如设置成-Dserser.port=8001则将端口设置成了8001（-D + 需要修改的参数）。
+
+2、启用热部署：Setting -> Bulid,Execution,Deloyment -> Compiler ->选中 Build project automatically(不过我觉得热部署不是很好用)
+
+3、关于数据库的链接问题：
+问题描述：本机上装的mysql版本为8.0.18，而导入的maven项目默认的mysql版本为5.1.37，数据连接出现问题
+控制台报错提示：com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: Could not create connection to database server. Attempted 
+reconnect 3 times. Giving up.
+解决思路：
+1>定位产生原因：
+查看pom.xml文件发现mysql的版本是5.1.37，而在cmd窗口输入指令mysql --version得知本机的mysql版本为8.0.18，产生的原因即为mysql的依赖jar包版本与本地mysql版本不符
+2>解决思路：
+①首先想到的是直接修改pom.xml中配置的mysql版本改为8.0.18，发现报错 [Dependency 'mysql:mysql-connector-java:8.0.30' not found]
+②在Database中添加一个mysql的数据库（本地数据库），需要注意的是在URL上加上serverTimezone=GMT参数保持时间同步
+③由于我是第一次导入maven项目，因此很多资源没有下载，首先在maven选项中点击刷新按钮，Reload All Maven project,这是会把很多资源下载下来。然后选择在右击Dependencies
+选择download Source，这时会发现Dependencies中多了一个mysql 8.0.18的jar
+④回过了头来看pom.xml问价，发现mysql 8.0.18版本不再报错，高兴之下立即启动了项目，发现报错[Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.]
+这个错误不是致命的，但是毕竟不好看，于是在application.properties文件中关于数据库的配置加上如下参数：[autoReconnect=true]
+spring.datasource.url=jdbc:mysql://localhost:3306/demo?characterEncoding=UTF8&autoReconnect=true
+⑤刚才的错误已经解决，但是随即又出现了另一个错误[Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.]
+非常明显是数据的驱动错误，于是将application.properties文件中关于数据库的配置驱动改为com.mysql.cj.jdbc.Driver，重新启动后不再报错
+⑥此时在浏览器中访问登录接口，报错[com.mysql.cj.exceptions.InvalidConnectionAttributeException: The server time zone value '�й���׼ʱ��' is unrecognized or represents more than one time zone. You must configure either the server or JDBC driver (via the serverTimezone configuration property) to use a more specifc time zone value if you want to utilize time zone support.
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:1.8.0_251]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[na:1.8.0_251]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:1.8.0_251]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) ~[na:1.8.0_251]]
+回想起在Database中添加mysql数据库时有加serverTimezone=GMT参数，于是同理修改pplication.properties中数据的配置，加上参数[serverTimezone=GMT]
+spring.datasource.url=jdbc:mysql://localhost:3306/demo?characterEncoding=UTF8&autoReconnect=true&serverTimezone=GMT
+重新访问接口，登录成功。
+3>总结：出现问题一定要快速定位，缺什么补什么，多进行尝试。

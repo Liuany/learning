@@ -1,0 +1,42 @@
+一：基础操作快捷键：
+1、设置快捷键：CTRL + ALT + S (跟QQ冲突)
+2、CTRL + SHIFT + V 复制历史（保留5个版本）
+3、复制一行或多行：CTRL + D
+4、代码格式化：CTRL + ALT + L (与QQ冲突)，不建议全选格式化，建议选中已修改的代码进行格式化
+5、上下移动一行或多行：ALT/CTRL + SHIFT + 选中行
+6、删除一行： CTRL + Y
+7、调至下一个词：CTRL + '→' / '←'
+8、选中一个词：CTRL + SHIFT + '→' / '←'
+9、行内快速定位：CTRL + G
+10、tabs快速切换：ALT + '→' / '←' (无论tab是展示在顶部还是左右两侧，快捷键都同样不变)
+11、查找最近浏览过的文件：CTRL + E
+12、快速打开文件所在的文件夹：右键选中文件，选择 show in explorer
+13、单个文件内容查找：CTRL + F
+14、单个文件内容替换： CTRL + R
+15、全局查找： CTRL + SHIFT + F （验证无效）
+16、万能全局查找： SHIFT + SHIFT (该功能异常强大，感觉除了单页面查找以外，这个是最方便的)
+17、按名字搜索类： CTRL + N
+18、按文件名搜索问价： CTRL + SHIFT + N
+19、万能快捷键： ALT + ENTER
+20、编辑区字体大小设置：Eidtor -> Color Scheme Font
+21、快速生成getter与setter方法： 光标在类里 按ALT + Ins 选择Getter and Setter，然后全选确定
+22、纵向选择多列：按住ALT键不放，鼠标点击拖动
+23、删除tab页中的标签： SHIFT + 左键
+24、重命名： SHIFT + F6
+25、抽取方法： CTRL + SHIFT + M
+26、生成变量： CTRL + SHIFT + V
+27、快速生成main函数：psvm
+28、答应日志： sout
+29、快速生成for循环： fori/foreach （若写成10.fori则i的范围默认为10，若 dto.fori则以改对象的长度为单位）
+30、在Setting -> Editor -> Live Templates中可以修改和自定义模板($~$.类型,两个$符中可以定义变量)
+31、快速生成是否为null代码：dto.null 
+32、快速输出对象：dto.sout （可以在postfix Completion中查看更多使用方式，区别于Live Templates的是postfix无法自定义）
+
+二：调试快捷键
+F8：运行到下一行
+F9：运行到下一个断点或执行完请求
+F7：进入到方法体，即便方法体中没有打断点，同样可以进入
+ALT + SHIFT + F7：强制进入方法体，与F7不同的是可以进入第三方jar中的方法（基本不用）
+ALT + F9：执行到光标的地方，也就是说运行到临时断点处
+单个断点设置：右键断点可以选择将单个断点设置为是否有效，同时可以设置条件断点
+异常断点设置：可以在断点管理中加异常断点，自定义条件，符合条件时程序停下来

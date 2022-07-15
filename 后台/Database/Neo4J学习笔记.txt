@@ -1,0 +1,34 @@
+一、CQL常用指令
+1、CREATE命令
+功能：①创建没有属性的节点 ②使用属性创建节点 ③在没有属性的节点之间创建关系  ④使用属性创建节点之间的关系 ⑤为节点或关系创建单个或多个标签
+1>创建一个没有属性的节点
+语法:CREATE (<node-name>:<label-name>)
+node-name:节点名
+label-name:标签名
+eg:CREATE (emp:Employee) 创建一个emp节点，其标签为Employee
+
+2>创建具有属性的节点
+语法:CREATE (<node-name>:<node-label> {property1-name:property1-value}……propertyn-name:propertyn-value})
+property1-name……propertyn-name:属性名
+property1-value……propertyn-value：属性值
+eg:CREATE (dept:Dept {deptno:"100",deptname:"电子政务事业部",location:"科创软件园"})
+
+2、MATCH命令
+1>MATCH语法命令
+功能：①从数据库获取有关节点和属性的数据 ②从数据库获取有关节点，关系和属性的数据
+语法：MATCH (<node-name>:<label-name>)
+eg:MATCH (dept:Dept)
+notice:这个语句会报错，因为MATCH语句需要与其他语句组合才能查询出结果，如RETRUN
+eg:MATCH (dept:Dept {deptno:"100",deptname:"电子政务事业部"}) RETURN dept   --查询标签为Dept,deptno为"100",deptname为"电子政务事业部"的数据
+eg:MATCH (n:Dept) WHERE n.deptno = "100" AND n.deptname = "电子政务事业部" RETURN n --查询标签为Dept,deptno为"100",deptname为"电子政务事业部"的数据的另一种写法
+
+3、RETURN命令
+功能：①检索节点的某些属性 ②检索节点的所有属性 ③检索节点和关联关系的某些属性  ④检索节点和关联关系的所有属性
+语法：RETRUN <node-name>.<property1-name>……<node-name>.<propertyn-name>
+eg: RTURN dept.name
+notice:RETURN命令无法单独使用，应与MATCH命令和CREATE命令组合使用
+
+4、MATCH & RETURN 
+功能：①检索节点的某些属性 ②检索节点的所有属性 ③检索节点和关联关系的某些属性  ④检索节点和关联关系的所有属性
+语法：MATCH command RETURN command
+eg：MATCH (dept:Dept) RETURN dept.deptname

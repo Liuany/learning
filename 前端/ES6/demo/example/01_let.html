@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>let</title>
+</head>
+<body>
+    <script>
+        // 1、变量不能重复声明
+        let star = '王阳明';
+        //    let star = '王守仁';
+        
+        // 2、块级作用域	全局、函数、eval   
+        // if-else while for
+        {
+            let girl = '霏霏';
+        }
+        console.log(gilr);
+
+        // 3、不存在变量提升
+        console.log(song)
+        let song = '快乐起床歌';
+
+        // 4、不影响作用域链
+        function fn(){
+            let statment = 'Hello Word';
+            console.log(statment);
+        }
+        fn();
+    </script>
+</body>
+</html>

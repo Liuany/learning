@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>变量的解构赋值</title>
+</head>
+<body>
+    <script>
+        // 1、数组的解构
+        const F4 = ['张三','李四','王五','赵六'];
+        let [zhang,Li,Wang,Zhao] = F4;
+        console.log(zhang);
+        console.log(Li);
+        console.log(Wang);
+        console.log(Zhao);
+
+        const King = {
+            firstName:'刘',
+            lastName:'邦',
+            tongyi:function(){
+                console.log('我统一了中国，建立了汉王朝')
+            }
+        };
+
+        // 2、对象的解构
+        let {firstName,lastName,tongyi} = King;
+        console.log(firstName);
+        console.log(lastName);
+        console.log(tongyi);
+        tongyi();
+    </script>
+</body>
+</html>
