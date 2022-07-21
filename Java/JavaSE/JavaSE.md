@@ -42,7 +42,7 @@
 | 类、方法和变量修饰符 | abstract     | 表明类或者成员方法具有抽象属性，用于修改类或方法             |
 | 类、方法和变量修饰符 | class        | 声明一个类，用来声明新的Java类                               |
 | 类、方法和变量修饰符 | extends      | 表明一个类型是另一个类型的子类型。对于类，可以是另一个类或者抽象类；对于接口，可以是另一个接口 |
-| 类、方法和变量修饰符 | final        | 用来说明最终属性，表明一个类不能派生出子类，或者成员方法不能被覆盖，或者成员域的值不能被改变，用来定义常量 |
+| 类、方法和变量修饰符 | final        | 用来说明最终属性，==表明一个类不能派生出子类==，或者成员方法不能被覆盖，或者成员域的值不能被改变，用来定义常量 |
 | 类、方法和变量修饰符 | implements   | 表明一个类实现了给定的接口                                   |
 | 类、方法和变量修饰符 | interface    | 接口                                                         |
 | 类、方法和变量修饰符 | native       | 用来声明一个方法是由与计算机相关的语言（如C/C++/FORTRAN语言）实现的 |
@@ -715,11 +715,21 @@ public static void printArray(int [][] array){
 ```java
 public class Student {
 
+    // 无参构造，当一个类没有写任何构造方法时，无参构造是默认的构造器
+    public Student(){
+
+    }
+
+    // 有参构造，可以重载
+    public Student(String name){
+        this.name = name;
+    }
+
     // 成员变量
     String name;
     int age;
 
-    // 方法
+    // 方法体
     public void study(){
         System.out.println(this.name + "在学习");
     }
@@ -857,9 +867,404 @@ public class Application {
 }
 ```
 
+###### Super
+
+> super就是子类继承父类之后在子类中的父类对象，可以通过super来访问父类的非私有方法和非私有属性。
+
+- super()调用父类的构造方法，必须在构造方法的第一行，默认是调用父类的无参构造方法，可以修改为调用有参构造方法。
+- super只能出现在子类的方法或者构造方法之中
+- super和this不能同时调用构造方法，也就是说在任意构造方法中无法调用其他构造方法
+- super代表的是父类引用，this代表的是当前类
+- super必须在有继承关系后才能在子类使用，this的使用没有条件
+- super()是父类的无参构造，this()是当前类的无参构造
+
+```java
+// 父类
+public class Person {
+
+    String desc = "人";
+
+    // 父类的私有属性子类无房访问
+    private String history = "由猿类进化";
+
+    // 父类无参构造
+    public Person(){
+        System.out.println("父类无参构造被调用了");
+    }
+
+    public void print(){
+        System.out.println(this.desc);
+    }
+}
+
+// 子类
+public class Man extends Person{
+
+    String desc = "男人";
+
+    // 子类无参构造
+    public Man(){
+        // 隐藏代码:在子类的无参构造中一定会先执行父类的无参构造，且该方法的调用必须是在第一行，因此在无参构造中不可调用其他构造方法。
+        super();
+        System.out.println("子类无参构造被调用了");
+    }
+
+    public void print(){
+        // 输出子类（自身）的desc
+        System.out.println(this.desc);
+        // 输出父类的desc
+        System.out.println(super.desc);
+    }
+
+    public void test(){
+        print();
+        this.print();
+        super.print();
+    }
+
+}
+
+// 测试
+public class Application {
+    public static void main(String[] args) {
+        Man man = new Man();
+        man.test();
+    }
+}
+```
+
+![](C:\Users\Administrator\Desktop\学习\images\super.png)
+
+###### 方法重写
+
+> 重写必须有继承关系，指的是子类重写父类的方法
+
+==Q：为什么需要重写？==
+
+A：父类的方法子类不一定需要或不一定满足。
+
+- 方法名必须相同
+- 参数列表必须相同
+- 修饰符范围可以扩大但不能缩小（public > protected > defualt > private）
+- 抛出异常的范围可以缩小但不能扩大（ClassNotFoundException < Exception）
+- ==以下三类方法无法被重写：==
+  1. 被static修饰的方法：该类方法属于类，不属于实例对象，因此不能被重写。
+  2. 被final修复的方法：被final关键字修饰的方法或属性存储在常量池，这部分属性和方法不可被修改。
+  3. 被private修饰的方法：该类方法属于父类私有，不能被子类继承，因此无法被重写。
+
+```java
+// 父类
+public class Foo {
+
+    private String name = "父亲";
+
+    public void claim(){
+        System.out.println("我是" + this.name);
+    }
+
+    public static void hobby(){
+        System.out.println("我喜欢钓鱼");
+    }
+
+    public void showAge(){
+        System.out.println("我今年36岁了");
+    }
+}
+
+// 子类
+public class Boo extends Foo {
+
+    private String name = "儿子";
+
+    /**
+     * @descrtion 重写父类claim方法
+     */
+    @Override
+    public void claim() {
+        System.out.println("我是儿子");
+    }
+
+    public static void hobby(){
+        System.out.println("我喜欢玩英雄联盟");
+    }
+
+    /**
+     * @descrtion 重写父类showAge方法
+     */
+    public void showAge(){
+        System.out.println("我今年10岁了");
+    }
+
+    public void useFooMethod(){
+        super.claim();
+        super.hobby();
+        super.showAge();
+    }
+}
+
+public static void main(String[] args) {
+    // Foo foo:定义引用类型，这里是父类，其引用保存在栈内    new Boo():开辟内存空间，定义实际类型，其内存分配在堆空间
+    Foo foo = new Boo();    // 该对象为父类对象，但引用指向了子类对象
+    // 由于子类重写了父类的claim方法，因此调用的是子类的claim方法
+    foo.claim();    // 我是儿子
+    // 子类继承了父类的所有方法，并调用父类的静态方法hobby
+    foo.hobby();    // 我喜欢钓鱼
+    // 虽然子类没有使用@Override来注释showAge方法，但该方法同样被重写了，因此调的是子类的showAge方法
+    foo.showAge();  // 我今年10岁了
+
+    // 这是一个完全的父类的对象，其方法调用均为父类
+    Foo foo2 = new Foo();
+    foo2.claim();   // 我是父亲
+    foo2.hobby();   // 我喜欢钓鱼
+    foo2.showAge(); // 我今年36岁了
+
+    // 该对象为子类对象，它可以调用父类的非私有属性和方法，在方法重写时调用的是重写后的方法
+    Boo boo = new Boo();
+    boo.claim();    // 我是儿子
+    boo.hobby();    // 我喜欢玩英雄联盟
+    boo.showAge();  // 我今年10岁了
+    boo.useFooMethod(); // 在该方法中使用super关键字调用父类的方法
+}
+```
+
 
 
 #### 多态
+
+> 多态即是一方法可以根据发送对象的不同而采取多种不同的行为方式，一个对象的实际类型是确定的，但可以指向对象的引用的类型有很多（如父类、有关系的类），因此程序只有在运行时才知道具体调用的方法是哪个，在编程时是无法知晓的，这便是多态的一种表现形式。
+
+###### 多态存在的条件
+
+1. 实现多态的基础条件是必须要有继承关系。
+2. 实现多态的编程方式是子类重写父类的方法。
+3. 实现多态的具体表现是父类引用指向子类对象
+
+- 多态是方法的多态，不存在属性的多态。
+- 只有存在继承关系的两类才能进行类型转换，否则将抛出ClassCastException异常
+
+```java
+//父、子类参照继承章节
+
+public static void main(String[] args) {
+    // 一个类型的实际类型是确定的
+    // new Boo()
+    // new Foo()
+
+    // 可以指向的引用类型就是不确定的：父类的引用指向子类
+
+    // 子类能调用的方法都是自己的或者继承自父类的
+    Boo boo = new Boo();
+
+    // 父类可以指向子类，在父类的方法被子类重写的情况下是调用子类的方法，但是父类不可以调用子类的独有方法
+    Foo foo = new Boo();
+    Object obj = new Boo();
+
+    // 对象能执行哪些方法，主要看左边的引用类型是什么，和右边的实际类型关系不大
+    ((Boo) foo).useFooMethod();     // 父类向下强转为子类，调用子类方法，但这种方式基本不用
+    boo.useFooMethod();     // 子类调用自己的独有方法
+}
+```
+
+#### instanceof
+
+> 其本质是判断两个类之间是否存在父子关系：A instanceof B 即A是否为B的子类
+
+- 实例化一个对象时，左边决定了实例化对象的引用类型，引用类型是用来作instanceof的依据，实际类型不用作instanceof的比较。
+- 如果两个引用类型之间没有父子关系，则会出现编译错误。
+- A instanceof B可以理解为A是不是B的子类，是则返回true,否则返回false。
+
+```java
+public static void main(String[] args) {
+    // Object > Foo
+    // Object > Foo > Boo
+    // Object > Foo > Coo
+
+    Object boo = new Boo(); // 引用类型是Object
+    System.out.println(boo instanceof Boo);   // true
+    System.out.println(boo instanceof Foo);   // true
+    System.out.println(boo instanceof Object);   // true
+    System.out.println(boo instanceof Coo);   // false
+    System.out.println(boo instanceof String);   // false
+
+    Foo foo = new Boo();    // 引用类型是Foo
+    System.out.println(foo instanceof Boo);   // true
+    System.out.println(foo instanceof Foo);   // true
+    System.out.println(foo instanceof Object);   // true
+    System.out.println(foo instanceof Coo);   // false
+    // System.out.println(foo instanceof String);    编译报错
+
+    Boo son = new Boo();    // 引用类型是Boo
+    System.out.println(son instanceof Boo);   // true
+    System.out.println(son instanceof Foo);   // true
+    System.out.println(son instanceof Object);   // true
+    // System.out.println(son instanceof Coo);   编译报错
+    // System.out.println(son instanceof String);    编译报错
+}
+```
+
+
+
+###### 强制转换
+
+> 能进行强制装换的两个类一定存在父子关系
+
+- 强制转换的条件是存在父子关系，父类引用可以指向子类对象。
+- 把子类转成父类，向上转型，无需强制转换，但会造成独有方法的丢失。
+- 把父类转成子类，向下转型，需要强制转换，可以获得子类的独有方法，但也会丢失父类的私有属性和方法。
+
+```java
+public static void main(String[] args) {
+    // 类型的相互转换：父 - 子
+    Foo foo = new Boo();    // Boo实际类型向上转换为Foo引用类型无需强制转换
+    Boo boo = (Boo)foo;     // 将foo强制转换成Boo类型属于将父类型转换为子类型的向下转换则需要进行强制转换
+
+    boo.useFooMethod(); // 将父类型强制转换成子类型之后可以调用子类型的独有方法
+}
+```
+
+
+
+#### static
+
+> static是一个关键字，被static修饰的属性和方法在类被加载时就会被分配到内存空间
+
+- 被static修饰的属性和方法无需实例化对象就可以被使用
+- 静态代码块在类加载时就会被调用，优先级最高，==且无论实例化多少个对象该代码块在一个进程中都只会被执行一次==
+
+###### 静态属性和方法 
+
+```java
+public class Teacher {
+    
+    // 静态代码块：优先级最高，仅在类加载时调用一次
+    static {
+        System.out.println("我是静态代码块");
+    }
+
+    // 匿名代码块：优先级次于静态代码块，在类每次实例化前都会被加载，多用于数据的初始化
+    {
+        System.out.println("我是匿名代码块");
+    }
+
+    private static String name = "张三";  // 静态属性无需实例化就可以使用
+    private double salary = 8000.00;    // 非静态属性必须实例化后才能使用
+
+    // 静态方法无需实例化就可以调用
+    public static void goClass(){
+        System.out.println("每个老师都要求去上课");
+    }
+
+    // 非静态方法必须实例化后才能调用
+    public void drive(){
+        System.out.println("不是每个老师都会开车");
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Teacher.name);   // 静态变量可以直接调用
+//        System.out.println(name);   // 本类之间使用方式
+        Teacher.goClass();      //静态方法可以直接使用
+//        goClass();  // 本类之间使用方式
+        System.out.println("================分割线================");
+
+        Teacher zhang = new Teacher();
+        System.out.println("================分割线================");
+        Teacher wang = new Teacher();
+    }
+}
+```
+
+![static](C:\Users\Administrator\Desktop\学习\images\static.png)
+
+#### 抽象类
+
+> 抽象类被abstract关键字修饰，是对类方法是抽象
+
+- 抽象类中可以没有抽象方法，但有抽象方法的类必须是抽象类。
+- 抽象类不能实例化，只能由子类继承并重写抽象方法。
+- 抽象方法只有声明，没有实现，通过子类重写来实现。
+- 抽象类用得不多，主要是用来优化代码。
+
+```java
+// 被abstract关键字修饰的类即为抽象类
+public abstract class Action {
+
+    // 抽象方法被abstract关键字修饰，只有定义，没有实现
+    public abstract void run();
+}
+
+// 继承抽象类的类必须实现抽象类的抽象方法
+public class Run  extends Action{
+    @Override
+    public void run() {
+        System.out.println("开跑！！");
+    }
+}
+```
+
+#### 接口
+
+> 接口是一组规范，其本质就是契约，接口不能实例化，也不能有方法的实现。
+
+| 类型   | 特征                             |
+| ------ | -------------------------------- |
+| 普通类 | 只有具体的实现                   |
+| 抽象类 | 具体的实现和规范（抽象方法）都有 |
+| 接口   | 只有规范                         |
+
+- 接口是对某一类行为的约束的特殊类。
+- 接口用于定于一些规范（抽象方法），其本身无法写方法的实现，但实现接口的类可按需重写接口的方法。
+- 接口所有的方法都默认被public abstract修饰。
+- 接口所有的属性都是常量，默认被public static final修饰，但是一般不在接口中定义常量。
+- 接口不能实例化，接口没有构造方法。
+- 不同于继承的单继承模式，一个类允许实现多个接口。
+- 一个类若实现了一个或多个接口，则必须重写所实现接口的所有方法。
+
+```java
+// 接口被interface关键字修饰
+public interface PageFunction {
+
+//    public abstract add();    接口的所有方法默认被public abstract修饰，可以省略不写
+    void add();
+    void del(String id);
+    void update(Boo boo);
+    void query(String name);
+}
+
+public interface SubFunction {
+
+    void exportData(String id);
+}
+
+// 一个类允许实现一个或多个接口
+public class Page implements PageFunction, SubFunction{
+    @Override
+    public void add() {
+
+    }
+
+    @Override
+    public void del(String id) {
+
+    }
+
+    @Override
+    public void update(Boo boo) {
+
+    }
+
+    @Override
+    public void query(String name) {
+
+    }
+
+    @Override
+    public void exportData(String id) {
+
+    }
+}
+```
+
+
 
 #### 内部类
 
@@ -879,7 +1284,7 @@ public class Application {
 
 - 成员内部类不能包含静态属性和方法。
 
-- 成员内部类的成员变量与方法允许与外部类重名，但这么做的话需要使用『外部类名.this』进行访问
+- 成员内部类的成员变量与方法允许与外部类重名，但这么做的话需要使用『外部类名.this』进行访问，不重名可以直接使用。
 
 ```java
 // 父类
@@ -1096,3 +1501,139 @@ public class Son {
 
 
 
+# 异常
+
+#### 什么是异常
+
+- 实际工作中，遇到的情况不可能是完美的。比如：你写得某个模块，用户输入不一定符合你的要求，你的程序要打开某个文件，这个文件可能不能存在或者格式不正确，又或者内存空间不足以支持程序运行......
+- 异常指程序运行中出现的不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。
+- 异常发生在程序运行期间，它影响了正常的程序执行流程。
+
+#### 异常的分类
+
+1. 检查性异常：最具代表性的检查性异常是用户错误或问题引起的异常，这是程序员无法遇见的。例如要打开一个不存在的文件时，一个异常就发生了，这些异常编译时不能简单地忽略。
+2. 运行时异常：运行时异常是可能被程序避免的异常。与检查性异常相反，运行时异常可以在编译时被忽略。
+3. 错误：错误不是异常，而是脱离程序员控制的问题。错误在代码中通常被忽略。例如，当栈溢出时，一个错误就发生了，它在编译时检查不到。
+
+#### 异常体系结构
+
+- Java把异常当做对象来处理，并定义了一个基类java.lang.Throwable作为所以异常类的超类。
+- 在Java API中已经定义了许多异常类，这些异常类分为两大类，错误==Error==和异常==Exception==。
+
+![Throwable](C:\Users\Administrator\Desktop\学习\images\Throwable.png)
+
+#### Error
+
+> Error类对象由Java虚拟机生成并抛出，大多数错误与代码编写者所执行的操作无关
+
+- Java虚拟机运行错误（VirtualMachineError），当JVM不再有继续执行操作所需的内存资源时，将出现OutOfMemoryError。这些异常发生是，JVM一般会选择线程终止。
+- JVM试图执行应用时，如类定义错误（NoClassDefFoundError）、链接错误（LinkageError）。这些错误是不可查的，因为它们在应用程序控制和处理能力之外，而且绝大多数是程序运行时不允许出现的状况。
+
+#### Exception
+
+在Exception分支中有一个重要的子类RuntimeException（运行时异常）
+
+- ArrayIndexOutOfBoundsException（数组下标越界）
+- NullPointerException（空指针异常）
+- ArithmeticException（算术异常）
+- MissingResourceException（丢失资源）
+- ClassNotFoundException（找不到类）
+- ....
+
+这些异常是不检查异常，程序中可以选择捕获，也可以不处理。这些异常一般是由程序逻辑错误引起的，程序应该从逻辑角度尽可能避免这些异常的发生。
+
+#### Error和Exception的区别
+
+> Error通常是灾难性的致命错误，是程序无法控制和处理的，当出现这些异常时，JVM一般会选择终止程序线程；Exception通常情况下是可以被程序处理的，并且在程序中应该尽可能的去处理这些异常。
+
+#### 捕获异常和抛出异常
+
+- 关键字：try、catch、finally、throw、throws
+
+``` java
+public class ExceptionDemo {
+    public static void main(String[] args) {
+        int a = 1;
+        int b = 0;
+
+        try {   // try-catch是捕获异常的主体结构
+
+            if(b == 0){
+                throw new ArithmeticException("主动抛出异常");    //在方法体中可以使用关键字throw来主动抛出异常
+            }
+
+//            int c = a / b;
+            divide();
+        } catch (ArithmeticException e) {
+            System.out.println("异常被捕获了");
+        } catch (Exception e) {     //catch允许有多个，但是必须由小及大，否则会出现编译错误
+            System.out.println("Exception");
+        } catch (Throwable e) {
+            System.out.println("Throwable");
+        } finally {
+            System.out.println("finally的代码块一定会被执行，一般用来释放资源");
+        }
+    }
+
+    public static int divide() throws ArithmeticException{  //使用throws关键字对方法进行处理，向上抛出异常，交由上级处理
+        int a = 1;
+        int b = 0;
+
+        return  a / b;
+    }
+}
+```
+
+#### 自定义异常
+
+> 一个普通的类继承了Exception类之后就成为了一个自定义异常类
+
+```java
+// 继承Exception类之后该类成为异常类
+public class MyException extends Exception{
+
+    // 规定数字大于10则抛出异常
+    private int detail;
+
+    public MyException(int detail) {
+        this.detail = detail;
+    }
+
+    @Override
+    public String toString() {      // toString()：异常打印信息
+        final StringBuffer sb = new StringBuffer("MyException{");
+        sb.append("detail=").append(detail);
+        sb.append('}');
+        return sb.toString();
+    }
+}
+
+// 测试类
+public class Application {
+    public static void main(String[] args) {
+        try {
+            test(11);
+        } catch (MyException e) {
+            System.out.println("MyException=>" + e);	// MyException=>MyException{detail=11}
+        }
+    }
+
+    // 可能会存在异常的方法
+    public static void test(int a) throws MyException {
+        System.out.println("传入参数为：" + a);	// 传入参数为：11
+        if(a > 10){
+            throw new MyException(a);
+        }
+        System.out.println("OK");
+    }
+}
+```
+
+#### 异常经验总结
+
+- 处理运行时异常时，采用逻辑去合理规避同时辅助 try-catch处理。
+- 在多重cathc块后面，可以加一个 catch (Exception) 来处理肯能被遗漏的异常。
+- 在不确定的代码，也可以加上 try-catch 来处理潜在的异常。
+- 尽量去处理异常，切忌只是简单地调用 printStackTrace() 去打印异常。
+- 具体如何处理，要根据不同的业务需求会异常类型去决定。
+- 尽量添加finally语句块去释放占用的资源。
